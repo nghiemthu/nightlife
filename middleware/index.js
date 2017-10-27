@@ -1,4 +1,4 @@
-var Poll = require("../models/poll");
+var Event = require("../models/event");
 
 module.exports = {
   isLoggedIn: function(req, res, next) {

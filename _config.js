@@ -10,9 +10,9 @@ var ids = {
     callbackURL: "http://127.0.0.1:3000/auth/linkedin/callback"
   },
   twitter: {
-    consumerKey: 'mM1LkAQ7NSBEPVSD8zzNmliY5',
-    consumerSecret: 'Z27apAMb3WgO9nhbZBnDGQy8N7qOyWYkGF7ic5rrliOr45eri9',
-    callbackURL: "https://voting-app-thu.herokuapp.com"
+    consumerKey: 'fDi88c2cAlxDry4MYK2EVFrNz',
+    consumerSecret: '8TBLvlxeWJcv7sUsFmKFGGNPX3XDRzrLKg4JIoE1vL3QLKWRqx',
+    callbackURL: "https://nightlife-thunghiem.c9users.io"
   }
 };
 
