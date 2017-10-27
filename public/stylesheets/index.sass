@@ -1,0 +1,221 @@
+$blue-color: #199EB8
+$red-color: #ef5350
+$dark-blue-color: #1970b8
+
+body
+  font-family: 'Montserrat', sans-serif
+
+select
+  font-family: 'Montserrat', sans-serif 
+
+a 
+  color: #333
+  
+a:focus, a:hover 
+  color: $blue-color
+  text-decoration: none
+ 
+i
+  padding: 0 2px
+
+.btn
+  margin: 20px 10px
+  border-radius: 50px
+  background-color: $blue-color
+  border: none
+  padding: 10px 30px
+  font-weight: 800
+  cursor: pointer
+  color: white
+ 
+.btn:hover 
+  background-color: $dark-blue-color !important
+  
+.trash 
+  margin: 0px 10px
+  cursor: pointer
+  color: #f1f1f1 !important
+
+.trash:hover
+  color: $red-color !important
+
+.btn-link:hover
+  color: white
+  background-color: $dark-blue-color !important
+  text-decoration: none
+ 
+.line
+  width: 80px
+  height: 2px
+  background: white
+  margin: 0 auto
+  margin-bottom: 15px
+  border-radius: 50px
+  
+#mainNav 
+  position: absolute
+  width: 100%
+  z-index: 1
+  padding: 10px 0 15px
+  
+  .container
+    min-width: 90% 
+  button
+    margin-right: -20px
+  .navbar-brand 
+    color: white
+    font-weight: 800
+  .navbar-toggler
+    font-size: 12px
+    text-transform: uppercase
+    font-weight: 800
+    color: white
+    padding: 13px
+    border-color: #444
+  ul li a
+    font-size: 12px
+    text-transform: uppercase
+    font-weight: 600
+  @media screen and (min-width: 992px) 
+    color: #333 
+    background: transparent !important
+
+.header
+  background: no-repeat center center
+  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("https://image.freepik.com/free-photo/crop-man-using-laptop-at-street_1220-1772.jpg")
+  background-size: cover
+  text-align: center
+  margin-bottom: 20px
+  
+  h1
+    font-size: 40px
+    text-transform: uppercase
+    font-weight: 800
+  @media screen and (max-width: 992px)
+    h1 
+      font-size: 25px
+
+.heading-content
+  padding: 145px 0 100px
+  color: white
+
+.custom-select
+  outline: none
+  background: url('https://image.flaticon.com/icons/svg/118/118738.svg') right 0.65rem center no-repeat
+  background-size: 12px
+  margin-bottom: 0px
+  color: #333
+  cursor: pointer
+  border: 1px solid #e5e5e5
+  
+.post-title
+  font-size: 30px
+  font-weight: 800
+  margin-top: 25px
+  margin-bottom: 10px
+  @media screen and (max-width: 992px) 
+    font-size: 20px
+  
+.post-meta
+  span
+    color: #666
+  .vote
+    font-weight: 600
+  
+.btn-more
+  margin-right: 0
+  margin-top: 0
+  margin-left: 0
+  
+.form-group  
+  color: #333
+  label
+    font-size: 18px
+  input
+    height: 38px
+  .form-control
+    font-family: 'Montserrat', sans-serif
+  .input-danger
+    border-bottom-color: #ef5350
+ 
+ 
+.form-control
+  border: 0 none
+  border-radius: 0
+  padding: 0
+  border-bottom: 1px solid #e5e5e5
+
+.card
+  padding: 10px
+  border: none
+  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.25)
+  h4
+    font-size: 18px
+    font-weight: 400
+    
+.danger
+  color: #ef5350
+  margin-top: 5px
+
+#pie-chart    
+  width: 584px
+  height: 292px
+  
+footer
+  text-align: center
+  
+  
+.toast-wrap
+  display: block
+  position: fixed
+  width: 250px
+  margin: 0
+  padding: 0
+  letter-spacing: normal
+  z-index: 1000 !important
+
+.toast-wrap.top-right 
+  top: 70px
+  right: 40px
+
+.toast-single
+  position: relative
+  transition: all 0.3s linear
+  margin-bottom: 10px
+
+.close-toast-single 
+  position: absolute
+  top: 3px
+  right: 7px
+  font-size: 14px
+  cursor: pointer
+
+.toast-content-wrap 
+  display: inline-block
+  width: 190px
+  h2 
+    padding-top: 15px
+    font-size: 16px
+  p 
+    font-size: 14px
+
+.toast-icon-wrap 
+  width: 50px
+  text-align: center
+  float: left
+  font-size: 30px
+  margin-top: 10%
+  
+.error
+  background-color: #ef5350
+  color: #ffffff
+  
+.display-none 
+  opacity: 0
+
+
+@keyframes fadeOut
+  0%
+    opacity: 1
+  100%
+    opacity: 0
