@@ -13,7 +13,7 @@ class Header extends React.Component {
   }
   
   componentDidMount = () => {
-    this.setState({term: this.props.term});
+    this.setState({term: this.props.term || ''});
   }
   
   state = {

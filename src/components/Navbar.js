@@ -13,7 +13,7 @@ class Navbar extends React.Component {
   }
   
   componentDidMount = () => {
-    this.setState({term: this.props.event.term});
+    this.setState({term: this.props.event.term || ''});
   }
   
   state = {

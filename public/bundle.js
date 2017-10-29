@@ -33104,7 +33104,7 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Header.__proto__ || Object.getPrototypeOf(Header)).call.apply(_ref, [this].concat(args))), _this), _this.componentDidMount = function () {
-	      _this.setState({ term: _this.props.term });
+	      _this.setState({ term: _this.props.term || '' });
 	    }, _this.state = {
 	      term: ''
 	    }, _this.handleChange = function (event) {
@@ -33730,7 +33730,7 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Navbar.__proto__ || Object.getPrototypeOf(Navbar)).call.apply(_ref, [this].concat(args))), _this), _this.componentDidMount = function () {
-	      _this.setState({ term: _this.props.event.term });
+	      _this.setState({ term: _this.props.event.term || '' });
 	    }, _this.state = {
 	      toggle: false,
 	      term: ''
