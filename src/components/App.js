@@ -10,7 +10,7 @@ import MinimizedNavbar    from './MinimizedNavbar';
 class App extends React.Component {
   
   componentDidMount = () => {
-    this.props.actions.fetchEvents();
+    this.props.actions.fetchUser();
   }
 
   render() {

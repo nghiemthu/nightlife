@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const formatDate = (date) => {
   const monthNames = [
     'January',
@@ -61,3 +63,13 @@ export const sortBy = (array, key) => {
   return array;
   
 };
+
+export const getCoordByCity = (city, callback) => {
+  axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=AIzaSyBr94oZgk406CcH8xU9Rl2J35d-PA81ii0`)
+  .then(res => {
+    callback(res.data.results[0].geometry.location);
+	})
+	.catch((error) => {
+	   console.log(error);  
+  });
+}

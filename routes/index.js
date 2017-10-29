@@ -25,6 +25,10 @@ router.get("/logout", function(req, res){
    res.redirect("/");
 });
 
+router.get('/api/user', function(req, res){
+  res.json(req.user || null);
+});
+
 router.get('/api/users', function(req, res){
   User.find({})
     .exec(function(err, users){
@@ -37,7 +41,18 @@ router.get('/api/users', function(req, res){
 });
   
 router.get('/api/events', function(req, res){
-  Event.find({}).populate("members")
+  Event.find({})
+    .exec(function(err, events){
+    if (err)
+      console.log(err);
+    else {
+      res.json(events); 
+    }
+  });
+});
+
+router.get('/api/events/:id', function(req, res){
+  Event.findOne({name: req.params.id})
     .exec(function(err, events){
     if (err)
       console.log(err);
@@ -49,14 +64,38 @@ router.get('/api/events', function(req, res){
 
 router.post('/api/events', middleware.isLoggedIn, function(req, res){
     
-  Event.create({}, function(err, event){
+  Event.findOneAndUpdate({name: req.body.name}, 
+  {}, 
+  { upsert: true, 'new': true },
+  function(err, event){
     if (err) console.log(err);
     else {
       // Update the poll
       if (!req.body.name) {res.json({err: "Name is empty"}); return }
   
       event.name        = req.body.name;
-      event.members.push(req.body._id);
+      if (event.members.indexOf(req.user._id) <= -1)
+        event.members.push(req.user._id);
+      event.save();
+  
+      res.json(event);  
+    }
+  });
+});
+
+router.post('/api/events/remove', middleware.isLoggedIn, function(req, res){
+    
+  Event.findOneAndUpdate({name: req.body.name}, 
+  {}, 
+  { upsert: true, 'new': true },
+  function(err, event){
+    if (err) console.log(err);
+    else {
+      // Update the poll
+      if (!req.body.name) {res.json({err: "Name is empty"}); return }
+  
+      event.name    = req.body.name;
+      event.members = event.members.filter(mem => String(mem) !== String(req.user._id));
       event.save();
   
       res.json(event);  

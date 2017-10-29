@@ -4,8 +4,36 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as Actions from '../actions/index';
+import {getCoordByCity} from '../lib/utils';
 
 class Header extends React.Component {
+  
+  static contextTypes = {
+    router: PropTypes.object
+  }
+  
+  state = {
+    term: ''
+  }
+  
+  handleChange = (event) => {
+    this.setState({term: event.target.value});
+  }
+  
+  handleKeyPress = (event) => {
+    if (event.charCode === 13) {
+      event.preventDefault();
+      this.onSubmit();
+    }
+  }
+  
+  onSubmit = (event) => {
+    if (!this.state.term) return;
+    
+    this.context.router.history.push('/results');
+    getCoordByCity(this.state.term, (location) => this.props.actions.fetchEvents(location));
+    this.props.actions.searchNighLife({term: this.state.term});
+  }
   
   render() {
     return (
@@ -18,10 +46,10 @@ class Header extends React.Component {
                 <h1>NightLife</h1>
                 <div className="line"></div>
                 <form className="app-search main-search">
-                  <input type="text" className="form-control input-visible" placeholder="Search City"></input> 
-                  <Link to={`/results`}>
-                    <button type="button" className="btn btn-search" >Search</button>
-                  </Link>
+                  <input type="text" className="form-control input-visible" placeholder="Search City"
+                    value={this.state.term} onChange={this.handleChange} onKeyPress={this.handleKeyPress}
+                  /> 
+                  <button type="button" className="btn btn-search" onClick={this.onSubmit}>Search</button>
                 </form>     
               </div>
             </div>

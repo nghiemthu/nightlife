@@ -14,12 +14,10 @@ class ResultList extends React.Component {
     return (
       <section className='main'>
         <div className="container"> 
-          <h2>NightLife in Helsinki</h2>
+          <h2>NightLife in {this.props.event.term}</h2>
           <hr/>
-          {this.props.event.data.map((item) => <ListItem data={item} key={item.id}/>)}
-          <div className="clearfix">
-            <a className="float-right dark-text" href="#">Next &rarr;</a>
-          </div>
+          {(this.props.event.data.length <= 0) ? <div>Loading..</div> : 
+          this.props.event.data.map((item) => <ListItem data={item} key={item.id}/>)}
         </div>
       </section>
 

@@ -25,7 +25,7 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveU
 app.use(passport.initialize());
 app.use(passport.session());
   
-// Poll.remove({}, function(err) {if (err) console.log(err)});
+//Event.remove({}, function(err) {if (err) console.log(err)});
 // Option.remove({}, function(err) {if (err) console.log(err)});
 
 app.use("", index);

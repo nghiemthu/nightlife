@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 
 import * as Actions       from '../actions/index';
+import {getCoordByCity} from '../lib/utils';
 
 class ListItem extends React.Component {
   
@@ -13,15 +14,21 @@ class ListItem extends React.Component {
   renderCatogoryWrap = (categories) => categories.map(category => 
     <div className='catogory' key={category.alias}>{category.title}</div>);
 
+  addEvent = (id, isGoing) => () => {
+    event.preventDefault();
+    (!isGoing) ? this.props.actions.addEvent(id) : this.props.actions.removeEvent(id);
+  }
+
   render() {
     
-    const {data} = this.props;
+    const {data} = this.props || {};
+    const isGoing = data.members && data.members.indexOf(this.props.user._id) > -1;
     
     return (
       <div className='item'>
         <div className='item-header'>
           <a href={data.url} className="link name">{data.name}</a> 
-          <span className="isClose"> 0 going</span>
+          <span className="isClose">  {(data.members) ? data.members.length : 0} going</span>
         </div>
         <div className='catogory-wrap'>
           {this.renderCatogoryWrap(data.categories)}
@@ -40,10 +47,12 @@ class ListItem extends React.Component {
                 </div>
               </div>
               <div className="col-10 review-text">
-                <p>{(data.review) ? data.review.text : 'loading'}</p> 
+                <p>{(data.review) ? data.review.text : 'No Review'}</p> 
               </div>
             </div>
-            <a href="#" className="btn">Add To My List</a>
+            <button className="btn" onClick={this.addEvent(data.id, isGoing)}>
+              {(isGoing) ? 'Going' : 'Add To My List'}
+            </button>
           </div>
         </div>
         <div className="status"> 

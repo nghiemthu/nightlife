@@ -17,7 +17,7 @@ class ResultView extends React.Component {
       <div className="App">
         <Navbar />
         <ResultList />
-        <Footer />
+        <Footer isDark />
       </div>
     );
   }

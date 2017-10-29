@@ -28560,7 +28560,7 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.componentDidMount = function () {
-	      _this.props.actions.fetchEvents();
+	      _this.props.actions.fetchUser();
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
@@ -28602,7 +28602,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.getReview = exports.fetchEvents = undefined;
+	exports.removeEvent = exports.addEvent = exports.fetchUser = exports.getReview = exports.fetchEvents = exports.searchNighLife = undefined;
 	
 	var _axios = __webpack_require__(/*! axios */ 263);
 	
@@ -28618,21 +28618,44 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	_axios2.default.defaults.headers.common['Authorization'] = "Bearer F2jRj105AcmbhMirfydQAGriiKiWM0SJ2LYIewez7Y8JtibYkhYnwyj_IdPQZgwrG5cZbYHcZIklBLhiSk42sQYz1ySi2ZcN3orswQD-QtfAOV738ykXVchGy-HtWXYx";
+	var config = {
+	  headers: { 'Authorization': 'Bearer F2jRj105AcmbhMirfydQAGriiKiWM0SJ2LYIewez7Y8JtibYkhYnwyj_IdPQZgwrG5cZbYHcZIklBLhiSk42sQYz1ySi2ZcN3orswQD-QtfAOV738ykXVchGy-HtWXYx' }
+	};
 	
-	var fetchEvents = exports.fetchEvents = function fetchEvents() {
+	var searchNighLife = exports.searchNighLife = (0, _reduxActions.createAction)(types.SEARCH_NIGHTLIFE);
+	
+	var fetchEvents = exports.fetchEvents = function fetchEvents(coord) {
 	  return function (dispatch) {
-	    _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=nightlife&latitude=37.786882&longitude=-122.399972').then(function (res) {
+	    _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=nightlife&latitude=' + coord.lat + '&longitude=' + coord.lng, config).then(function (res) {
+	
+	      if (res.data.businesses.length <= 0) {
+	        alert('No Bussiness Found!');
+	        return;
+	      }
+	
 	      dispatch({
 	        type: types.GET_ALL_EVENTS,
 	        payload: res.data.businesses
 	      });
 	
+	      //Get Reviews
 	      res.data.businesses.forEach(function (business) {
-	        return _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/' + business.id + '/reviews').then(function (res) {
+	        return _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/' + business.id + '/reviews', config).then(function (res) {
 	          dispatch({
 	            type: types.GET_REVIEW,
 	            payload: { id: business.id, review: res.data.reviews[0] }
+	          });
+	        }).catch(function (error) {
+	          console.log(error);
+	        });
+	      });
+	
+	      //Get member going
+	      res.data.businesses.forEach(function (business) {
+	        return _axios2.default.get('/api/events/' + business.id).then(function (res) {
+	          dispatch({
+	            type: types.GET_MEMBER,
+	            payload: { id: business.id, members: res.data ? res.data.members : [] }
 	          });
 	        }).catch(function (error) {
 	          console.log(error);
@@ -28647,11 +28670,52 @@
 	var getReview = exports.getReview = function getReview(id) {
 	
 	  return function (dispatch) {
-	    _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/temple-nightclub-san-francisco-2/reviews').then(function (res) {
-	      console.log(res.data);
+	    _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/temple-nightclub-san-francisco-2/reviews', config).then(function (res) {
 	      dispatch({
 	        type: types.GET_REVIEW,
 	        payload: { id: id, review: res.data.reviews[0] }
+	      });
+	    }).catch(function (error) {
+	      console.log(error);
+	    });
+	  };
+	};
+	
+	var fetchUser = exports.fetchUser = function fetchUser() {
+	  return function (dispatch) {
+	    _axios2.default.get('/api/user').then(function (res) {
+	      dispatch({
+	        type: types.GET_USER,
+	        payload: res.data
+	      });
+	    }).catch(function (error) {
+	      console.log(error);
+	    });
+	  };
+	};
+	
+	var addEvent = exports.addEvent = function addEvent(id) {
+	  return function (dispatch) {
+	    _axios2.default.post('/api/events', { name: id }).then(function (res) {
+	
+	      if (res.data.err) alert(res.data.err);
+	
+	      dispatch({
+	        type: types.UPDATE_MEMBER,
+	        payload: res.data
+	      });
+	    }).catch(function (error) {
+	      console.log(error);
+	    });
+	  };
+	};
+	
+	var removeEvent = exports.removeEvent = function removeEvent(id) {
+	  return function (dispatch) {
+	    _axios2.default.post('/api/events/remove', { name: id }).then(function (res) {
+	      dispatch({
+	        type: types.UPDATE_MEMBER,
+	        payload: res.data
 	      });
 	    }).catch(function (error) {
 	      console.log(error);
@@ -32887,6 +32951,11 @@
 	});
 	var GET_ALL_EVENTS = exports.GET_ALL_EVENTS = 'GET_ALL_EVENTS';
 	var GET_REVIEW = exports.GET_REVIEW = 'GET_REVIEW';
+	var GET_USER = exports.GET_USER = 'GET_USER';
+	var SEARCH_NIGHTLIFE = exports.SEARCH_NIGHTLIFE = 'SEARCH_NIGHTLIFE';
+	var ADD_EVENT = exports.ADD_EVENT = 'ADD_EVENT';
+	var GET_MEMBER = exports.GET_MEMBER = 'GET_MEMBER';
+	var UPDATE_MEMBER = exports.UPDATE_MEMBER = 'UPDATE_MEMBER';
 
 /***/ }),
 /* 355 */
@@ -32927,6 +32996,9 @@
 	  _createClass(Footer, [{
 	    key: 'render',
 	    value: function render() {
+	
+	      var textClass = this.props.isDark ? 'dark-text' : null;
+	
 	      return _react2.default.createElement(
 	        'footer',
 	        { className: 'none-margin' },
@@ -32941,13 +33013,17 @@
 	              { className: 'col-lg-8 col-md-10 mx-auto' },
 	              _react2.default.createElement(
 	                'a',
-	                { href: '#', className: '' },
+	                { href: '#', className: textClass },
 	                'Linkedin '
 	              ),
-	              '|',
+	              _react2.default.createElement(
+	                'span',
+	                { className: textClass },
+	                '|'
+	              ),
 	              _react2.default.createElement(
 	                'a',
-	                { href: '#', className: '' },
+	                { href: '#', className: textClass },
 	                ' GitHub'
 	              ),
 	              _react2.default.createElement(
@@ -32998,6 +33074,8 @@
 	
 	var Actions = _interopRequireWildcard(_index);
 	
+	var _utils = __webpack_require__(/*! ../lib/utils */ 365);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -33012,9 +33090,34 @@
 	  _inherits(Header, _React$Component);
 	
 	  function Header() {
+	    var _ref;
+	
+	    var _temp, _this, _ret;
+	
 	    _classCallCheck(this, Header);
 	
-	    return _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).apply(this, arguments));
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Header.__proto__ || Object.getPrototypeOf(Header)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	      term: ''
+	    }, _this.handleChange = function (event) {
+	      _this.setState({ term: event.target.value });
+	    }, _this.handleKeyPress = function (event) {
+	      if (event.charCode === 13) {
+	        event.preventDefault();
+	        _this.onSubmit();
+	      }
+	    }, _this.onSubmit = function (event) {
+	      if (!_this.state.term) return;
+	
+	      _this.context.router.history.push('/results');
+	      (0, _utils.getCoordByCity)(_this.state.term, function (location) {
+	        return _this.props.actions.fetchEvents(location);
+	      });
+	      _this.props.actions.searchNighLife({ term: _this.state.term });
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
 	  _createClass(Header, [{
@@ -33045,15 +33148,13 @@
 	                _react2.default.createElement(
 	                  'form',
 	                  { className: 'app-search main-search' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control input-visible', placeholder: 'Search City' }),
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control input-visible', placeholder: 'Search City',
+	                    value: this.state.term, onChange: this.handleChange, onKeyPress: this.handleKeyPress
+	                  }),
 	                  _react2.default.createElement(
-	                    _reactRouterDom.Link,
-	                    { to: '/results' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { type: 'button', className: 'btn btn-search' },
-	                      'Search'
-	                    )
+	                    'button',
+	                    { type: 'button', className: 'btn btn-search', onClick: this.onSubmit },
+	                    'Search'
 	                  )
 	                )
 	              )
@@ -33067,6 +33168,9 @@
 	  return Header;
 	}(_react2.default.Component);
 	
+	Header.contextTypes = {
+	  router: _react.PropTypes.object
+	};
 	exports.default = (0, _reactRedux.connect)(
 	// map state to props
 	function (state) {
@@ -33084,17 +33188,29 @@
   \*******************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _redux = __webpack_require__(/*! redux */ 197);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 184);
+	
+	var _index = __webpack_require__(/*! ../actions/index */ 262);
+	
+	var Actions = _interopRequireWildcard(_index);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -33108,30 +33224,52 @@
 	  _inherits(MinimizedNavbar, _React$Component);
 	
 	  function MinimizedNavbar() {
+	    var _ref;
+	
+	    var _temp, _this, _ret;
+	
 	    _classCallCheck(this, MinimizedNavbar);
 	
-	    return _possibleConstructorReturn(this, (MinimizedNavbar.__proto__ || Object.getPrototypeOf(MinimizedNavbar)).apply(this, arguments));
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MinimizedNavbar.__proto__ || Object.getPrototypeOf(MinimizedNavbar)).call.apply(_ref, [this].concat(args))), _this), _this.renderLogin = function () {
+	      if (!_this.props.user.username) return _react2.default.createElement(
+	        'li',
+	        { className: 'nav-item' },
+	        _react2.default.createElement(
+	          'a',
+	          { className: 'btn btn-login', href: '/auth/twitter' },
+	          'Login'
+	        )
+	      );
+	
+	      return _react2.default.createElement(
+	        'li',
+	        { className: 'nav-item username' },
+	        _react2.default.createElement(
+	          'a',
+	          { className: '', href: '/logout' },
+	          _this.props.user.username,
+	          ' ',
+	          _react2.default.createElement('i', { className: 'fa fa-sign-out', 'aria-hidden': 'true' })
+	        )
+	      );
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
 	  _createClass(MinimizedNavbar, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "nav",
-	        { className: "navbar navbar-transparent bg-faded justify-content-between flex-nowrap flex-row" },
-	        _react2.default.createElement("a", { href: "/", className: "navbar-brand" }),
+	        'nav',
+	        { className: 'navbar navbar-transparent bg-faded justify-content-between flex-nowrap flex-row' },
+	        _react2.default.createElement('a', { href: '/', className: 'navbar-brand' }),
 	        _react2.default.createElement(
-	          "ul",
-	          { className: "nav navbar-nav flex-row" },
-	          _react2.default.createElement(
-	            "li",
-	            { className: "nav-item" },
-	            _react2.default.createElement(
-	              "a",
-	              { className: "btn btn-login", href: "#" },
-	              "Login"
-	            )
-	          )
+	          'ul',
+	          { className: 'nav navbar-nav flex-row' },
+	          this.renderLogin()
 	        )
 	      );
 	    }
@@ -33140,7 +33278,15 @@
 	  return MinimizedNavbar;
 	}(_react2.default.Component);
 	
-	exports.default = MinimizedNavbar;
+	exports.default = (0, _reactRedux.connect)(
+	// map state to props
+	function (state) {
+	  return _extends({}, state);
+	},
+	// map dispatch to props,
+	function (dispatch) {
+	  return { actions: (0, _redux.bindActionCreators)(Actions, dispatch) };
+	})(MinimizedNavbar);
 
 /***/ }),
 /* 358 */
@@ -33218,7 +33364,7 @@
 	        { className: 'App' },
 	        _react2.default.createElement(_Navbar2.default, null),
 	        _react2.default.createElement(_ResultList2.default, null),
-	        _react2.default.createElement(_Footer2.default, null)
+	        _react2.default.createElement(_Footer2.default, { isDark: true })
 	      );
 	    }
 	  }]);
@@ -33308,21 +33454,17 @@
 	          _react2.default.createElement(
 	            'h2',
 	            null,
-	            'NightLife in Helsinki'
+	            'NightLife in ',
+	            this.props.event.term
 	          ),
 	          _react2.default.createElement('hr', null),
-	          this.props.event.data.map(function (item) {
-	            return _react2.default.createElement(_ListItem2.default, { data: item, key: item.id });
-	          }),
-	          _react2.default.createElement(
+	          this.props.event.data.length <= 0 ? _react2.default.createElement(
 	            'div',
-	            { className: 'clearfix' },
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'float-right dark-text', href: '#' },
-	              'Next \u2192'
-	            )
-	          )
+	            null,
+	            'Loading..'
+	          ) : this.props.event.data.map(function (item) {
+	            return _react2.default.createElement(_ListItem2.default, { data: item, key: item.id });
+	          })
 	        )
 	      );
 	    }
@@ -33370,6 +33512,8 @@
 	
 	var Actions = _interopRequireWildcard(_index);
 	
+	var _utils = __webpack_require__(/*! ../lib/utils */ 365);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -33402,14 +33546,21 @@
 	          category.title
 	        );
 	      });
+	    }, _this.addEvent = function (id, isGoing) {
+	      return function () {
+	        event.preventDefault();
+	        !isGoing ? _this.props.actions.addEvent(id) : _this.props.actions.removeEvent(id);
+	      };
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
 	  _createClass(ListItem, [{
 	    key: 'render',
 	    value: function render() {
-	      var data = this.props.data;
+	      var _ref2 = this.props || {},
+	          data = _ref2.data;
 	
+	      var isGoing = data.members && data.members.indexOf(this.props.user._id) > -1;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -33425,7 +33576,9 @@
 	          _react2.default.createElement(
 	            'span',
 	            { className: 'isClose' },
-	            ' 0 going'
+	            '  ',
+	            data.members ? data.members.length : 0,
+	            ' going'
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -33466,14 +33619,14 @@
 	                _react2.default.createElement(
 	                  'p',
 	                  null,
-	                  data.review ? data.review.text : 'loading'
+	                  data.review ? data.review.text : 'No Review'
 	                )
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'a',
-	              { href: '#', className: 'btn' },
-	              'Add To My List'
+	              'button',
+	              { className: 'btn', onClick: this.addEvent(data.id, isGoing) },
+	              isGoing ? 'Going' : 'Add To My List'
 	            )
 	          )
 	        ),
@@ -33522,17 +33675,31 @@
   \**********************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _redux = __webpack_require__(/*! redux */ 197);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 184);
+	
+	var _index = __webpack_require__(/*! ../actions/index */ 262);
+	
+	var Actions = _interopRequireWildcard(_index);
+	
+	var _utils = __webpack_require__(/*! ../lib/utils */ 365);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -33546,48 +33713,100 @@
 	  _inherits(Navbar, _React$Component);
 	
 	  function Navbar() {
+	    var _ref;
+	
+	    var _temp, _this, _ret;
+	
 	    _classCallCheck(this, Navbar);
 	
-	    return _possibleConstructorReturn(this, (Navbar.__proto__ || Object.getPrototypeOf(Navbar)).apply(this, arguments));
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Navbar.__proto__ || Object.getPrototypeOf(Navbar)).call.apply(_ref, [this].concat(args))), _this), _this.componentDidMount = function () {
+	      _this.setState({ term: _this.props.event.term });
+	    }, _this.state = {
+	      toggle: false,
+	      term: ''
+	    }, _this.handleKeyPress = function (event) {
+	      if (event.charCode === 13) {
+	        event.preventDefault();
+	        _this.setState({ toggle: false });
+	        _this.onSubmit();
+	      }
+	    }, _this.handleChange = function (event) {
+	      _this.setState({ term: event.target.value });
+	    }, _this.onSubmit = function () {
+	      //this.context.router.history.push('/results');
+	      if (!_this.state.term) return;
+	
+	      (0, _utils.getCoordByCity)(_this.state.term, function (location) {
+	        return _this.props.actions.fetchEvents(location);
+	      });
+	      _this.props.actions.searchNighLife({ term: _this.state.term });
+	    }, _this.renderLogin = function () {
+	      if (!_this.props.user.username) return _react2.default.createElement(
+	        'li',
+	        { className: 'nav-item' },
+	        _react2.default.createElement(
+	          'a',
+	          { className: 'btn btn-login', href: '/auth/twitter' },
+	          'Login'
+	        )
+	      );
+	
+	      return _react2.default.createElement(
+	        'li',
+	        { className: 'nav-item username' },
+	        _react2.default.createElement(
+	          'a',
+	          { className: '', href: '/logout' },
+	          _this.props.user.username,
+	          ' ',
+	          _react2.default.createElement('i', { className: 'fa fa-sign-out', 'aria-hidden': 'true' })
+	        )
+	      );
+	    }, _this.toggleSearch = function () {
+	      _this.setState({ toggle: !_this.state.toggle });
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
 	  _createClass(Navbar, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
+	
+	      var inputClass = this.state.toggle ? 'form-control input-visible' : 'form-control';
+	
 	      return _react2.default.createElement(
-	        "nav",
-	        { className: "navbar navbar-inverse bg-inverse bg-faded justify-content-between flex-nowrap flex-row" },
+	        'nav',
+	        { className: 'navbar navbar-inverse bg-inverse bg-faded justify-content-between flex-nowrap flex-row' },
 	        _react2.default.createElement(
-	          "a",
-	          { href: "/", className: "navbar-brand" },
-	          "NightLife"
+	          'a',
+	          { href: '/', className: 'navbar-brand' },
+	          'NightLife'
 	        ),
 	        _react2.default.createElement(
-	          "ul",
-	          { className: "nav navbar-nav flex-row" },
+	          'ul',
+	          { className: 'nav navbar-nav flex-row' },
 	          _react2.default.createElement(
-	            "li",
-	            { className: "nav-item" },
+	            'li',
+	            { className: 'nav-item' },
 	            _react2.default.createElement(
-	              "a",
-	              { className: "nav-link pr-3", href: "#", id: "search-button" },
-	              _react2.default.createElement("i", { className: "fa fa-search", "aria-hidden": "true" })
+	              'a',
+	              { className: 'nav-link pr-3', href: '#', id: 'search-button',
+	                onClick: this.toggleSearch
+	              },
+	              _react2.default.createElement('i', { className: 'fa fa-search', 'aria-hidden': 'true' })
 	            ),
 	            _react2.default.createElement(
-	              "form",
-	              { className: "app-search search-toggle" },
-	              _react2.default.createElement("input", { type: "text", className: "form-control", placeholder: "Search City" })
+	              'form',
+	              { className: 'app-search search-toggle' },
+	              _react2.default.createElement('input', { type: 'text', className: inputClass, placeholder: 'Search City',
+	                value: this.state.term, onChange: this.handleChange, onKeyPress: this.handleKeyPress
+	              })
 	            )
 	          ),
-	          _react2.default.createElement(
-	            "li",
-	            { className: "nav-item" },
-	            _react2.default.createElement(
-	              "a",
-	              { className: "btn btn-login", href: "#" },
-	              "Login"
-	            )
-	          )
+	          this.renderLogin()
 	        )
 	      );
 	    }
@@ -33596,7 +33815,18 @@
 	  return Navbar;
 	}(_react2.default.Component);
 	
-	exports.default = Navbar;
+	Navbar.contextTypes = {
+	  router: _react.PropTypes.object
+	};
+	exports.default = (0, _reactRedux.connect)(
+	// map state to props
+	function (state) {
+	  return _extends({}, state);
+	},
+	// map dispatch to props,
+	function (dispatch) {
+	  return { actions: (0, _redux.bindActionCreators)(Actions, dispatch) };
+	})(Navbar);
 
 /***/ }),
 /* 362 */
@@ -33661,7 +33891,8 @@
 	
 	var DEFAULT_ACTION = {
 		data: [],
-		reviews: []
+		reviews: [],
+		term: ''
 	};
 	
 	var actionsHandlers = (_actionsHandlers = {}, _defineProperty(_actionsHandlers, types.GET_ALL_EVENTS, function (state, _ref) {
@@ -33678,6 +33909,27 @@
 				return item;
 			})
 		});
+	}), _defineProperty(_actionsHandlers, types.SEARCH_NIGHTLIFE, function (state, _ref3) {
+		var payload = _ref3.payload;
+		return _extends({}, state, {
+			term: payload.term
+		});
+	}), _defineProperty(_actionsHandlers, types.GET_MEMBER, function (state, _ref4) {
+		var payload = _ref4.payload;
+		return _extends({}, state, {
+			data: state.data.map(function (item) {
+				if (item.id == payload.id) item.members = payload.members;
+				return item;
+			})
+		});
+	}), _defineProperty(_actionsHandlers, types.UPDATE_MEMBER, function (state, _ref5) {
+		var payload = _ref5.payload;
+		return _extends({}, state, {
+			data: state.data.map(function (item) {
+				if (item.id == payload.name) item.members = payload.members;
+				return item;
+			})
+		});
 	}), _actionsHandlers);
 	
 	exports.default = (0, _reduxActions.handleActions)(actionsHandlers, DEFAULT_ACTION);
@@ -33687,9 +33939,113 @@
 /*!******************************!*\
   !*** ./src/reducers/user.js ***!
   \******************************/
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _reduxActions = __webpack_require__(/*! redux-actions */ 289);
+	
+	var _actionTypes = __webpack_require__(/*! ../constants/actionTypes */ 354);
+	
+	var types = _interopRequireWildcard(_actionTypes);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var DEFAULT_ACTION = {};
+	
+	var actionsHandlers = _defineProperty({}, types.GET_USER, function (state, _ref) {
+		var payload = _ref.payload;
+		return _extends({}, state, payload);
+	});
+	
+	exports.default = (0, _reduxActions.handleActions)(actionsHandlers, DEFAULT_ACTION);
+
+/***/ }),
+/* 365 */
+/*!**************************!*\
+  !*** ./src/lib/utils.js ***!
+  \**************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getCoordByCity = exports.sortBy = exports.makeKey = exports.getRandomColor = exports.formatDate = undefined;
+	
+	var _axios = __webpack_require__(/*! axios */ 263);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var formatDate = exports.formatDate = function formatDate(date) {
+	  var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	
+	  var day = date.getDate();
+	  var monthIndex = date.getMonth();
+	  var year = date.getFullYear();
+	
+	  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+	};
+	
+	var getRandomColor = exports.getRandomColor = function getRandomColor() {
+	  var r = Math.floor(Math.random() * 256);
+	  var g = Math.floor(Math.random() * 256);
+	  var b = Math.floor(Math.random() * 256);
+	  return "rgb(" + r + ", " + g + ", " + b + ")";
+	};
+	
+	var makeKey = exports.makeKey = function makeKey() {
+	  var text = "";
+	  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
+	  for (var i = 0; i < 5; i++) {
+	    text += possible.charAt(Math.floor(Math.random() * possible.length));
+	  }return text;
+	};
+	
+	var sortBy = exports.sortBy = function sortBy(array, key) {
+	
+	  if (key == 'date') {
+	    return array.sort(function (a, b) {
+	      return new Date(b.date) - new Date(a.date);
+	    });
+	  }
+	
+	  if (key == 'vote') {
+	    return array.sort(function (a, b) {
+	      var aVote = a.options.reduce(function (sum, item) {
+	        return sum + item.vote;
+	      }, 0);
+	
+	      var bVote = b.options.reduce(function (sum, item) {
+	        return sum + item.vote;
+	      }, 0);
+	
+	      return bVote - aVote;
+	    });
+	  }
+	
+	  return array;
+	};
+	
+	var getCoordByCity = exports.getCoordByCity = function getCoordByCity(city, callback) {
+	  _axios2.default.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyBr94oZgk406CcH8xU9Rl2J35d-PA81ii0').then(function (res) {
+	    callback(res.data.results[0].geometry.location);
+	  }).catch(function (error) {
+	    console.log(error);
+	  });
+	};
 
 /***/ })
 /******/ ]);
