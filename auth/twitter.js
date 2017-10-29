@@ -8,7 +8,7 @@ var init = require('../auth/init');
 passport.use(new TwitterStrategy({
     consumerKey: config.twitter.consumerKey,
     consumerSecret: config.twitter.consumerSecret,
-    callbackURL: 'https://nightlife-thunghiem.c9users.io/auth/twitter/callback'
+    callbackURL: 'https://nightlife-thu.herokuapp.com/auth/twitter/callback'
   },
   function(token, tokenSecret, profile, done) {
     

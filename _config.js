@@ -12,7 +12,7 @@ var ids = {
   twitter: {
     consumerKey: 'fDi88c2cAlxDry4MYK2EVFrNz',
     consumerSecret: '8TBLvlxeWJcv7sUsFmKFGGNPX3XDRzrLKg4JIoE1vL3QLKWRqx',
-    callbackURL: "https://nightlife-thunghiem.c9users.io"
+    callbackURL: "https://nightlife-thu.herokuapp.com/auth/twitter/callback"
   }
 };
 

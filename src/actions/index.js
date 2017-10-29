@@ -6,12 +6,13 @@ import * as types from '../constants/actionTypes';
 const config = {
   headers: {'Authorization': 'Bearer F2jRj105AcmbhMirfydQAGriiKiWM0SJ2LYIewez7Y8JtibYkhYnwyj_IdPQZgwrG5cZbYHcZIklBLhiSk42sQYz1ySi2ZcN3orswQD-QtfAOV738ykXVchGy-HtWXYx'}
 };
+const mainUrl = 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses';
 
 export const searchNighLife			= createAction(types.SEARCH_NIGHTLIFE);
 
 export const fetchEvents = (coord) => {
   return (dispatch) => {
-  	axios.get(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=nightlife&latitude=${coord.lat}&longitude=${coord.lng}`, config)
+  	axios.get(`${mainUrl}/search?term=nightlife&latitude=${coord.lat}&longitude=${coord.lng}`, config)
   	  .then(res => {
   	    
   	    if (res.data.businesses.length <= 0){
@@ -26,7 +27,7 @@ export const fetchEvents = (coord) => {
 				
 				//Get Reviews
 				res.data.businesses.forEach(business => 
-				  axios.get(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${business.id}/reviews`, config)
+				  axios.get(`${mainUrl}/${business.id}/reviews`, config)
           .then(res => {
             dispatch({ 
         		  type: types.GET_REVIEW,
@@ -61,7 +62,7 @@ export const fetchEvents = (coord) => {
 export const getReview = (id) => {
   
   return (dispatch) => {
-    axios.get(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/temple-nightclub-san-francisco-2/reviews`, config)
+    axios.get(`${mainUrl}/${id}/reviews`, config)
     .then(res => {
       dispatch({ 
   		  type: types.GET_REVIEW,

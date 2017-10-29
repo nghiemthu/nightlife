@@ -28621,12 +28621,13 @@
 	var config = {
 	  headers: { 'Authorization': 'Bearer F2jRj105AcmbhMirfydQAGriiKiWM0SJ2LYIewez7Y8JtibYkhYnwyj_IdPQZgwrG5cZbYHcZIklBLhiSk42sQYz1ySi2ZcN3orswQD-QtfAOV738ykXVchGy-HtWXYx' }
 	};
+	var mainUrl = 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses';
 	
 	var searchNighLife = exports.searchNighLife = (0, _reduxActions.createAction)(types.SEARCH_NIGHTLIFE);
 	
 	var fetchEvents = exports.fetchEvents = function fetchEvents(coord) {
 	  return function (dispatch) {
-	    _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=nightlife&latitude=' + coord.lat + '&longitude=' + coord.lng, config).then(function (res) {
+	    _axios2.default.get(mainUrl + '/search?term=nightlife&latitude=' + coord.lat + '&longitude=' + coord.lng, config).then(function (res) {
 	
 	      if (res.data.businesses.length <= 0) {
 	        alert('No Bussiness Found!');
@@ -28640,7 +28641,7 @@
 	
 	      //Get Reviews
 	      res.data.businesses.forEach(function (business) {
-	        return _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/' + business.id + '/reviews', config).then(function (res) {
+	        return _axios2.default.get(mainUrl + '/' + business.id + '/reviews', config).then(function (res) {
 	          dispatch({
 	            type: types.GET_REVIEW,
 	            payload: { id: business.id, review: res.data.reviews[0] }
@@ -28670,7 +28671,7 @@
 	var getReview = exports.getReview = function getReview(id) {
 	
 	  return function (dispatch) {
-	    _axios2.default.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/temple-nightclub-san-francisco-2/reviews', config).then(function (res) {
+	    _axios2.default.get(mainUrl + '/' + id + '/reviews', config).then(function (res) {
 	      dispatch({
 	        type: types.GET_REVIEW,
 	        payload: { id: id, review: res.data.reviews[0] }
