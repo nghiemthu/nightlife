@@ -2,22 +2,21 @@ import React, { PropTypes }   from 'react';
 import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 
-import * as Actions       from '../actions/index';
-import Footer             from './Footer';
-import Header             from './Header';
-import MinimizedNavbar    from './MinimizedNavbar';
+import * as Actions         from '../actions/index';
+import Footer               from './Footer';
+import ResultList           from './ResultList';
+import Navbar               from './Navbar';
 
-class App extends React.Component {
+class ResultView extends React.Component {
   
   componentDidMount = () => {
-    this.props.actions.fetchEvents();
   }
 
   render() {
     return (
       <div className="App">
-        <MinimizedNavbar />
-        <Header />
+        <Navbar />
+        <ResultList />
         <Footer />
       </div>
     );
@@ -29,6 +28,5 @@ export default connect(
   (state) => ({ ...state }),
   // map dispatch to props,
   (dispatch) => ({ actions: bindActionCreators(Actions, dispatch) })
-)(App);
-
+)(ResultView);
 

@@ -6,6 +6,7 @@ import ReduxThunk from 'redux-thunk';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import App from './components/App';
+import ResultView from './components/ResultView';
 
 import reducers from './reducers/index';
 
@@ -16,6 +17,7 @@ ReactDOM.render(
     	<BrowserRouter>
    		<div>
    			<Switch>
+   			  <Route path="/results" component={ResultView} />
    				<Route path="/" component={App} />
    			</Switch>
    		</div>

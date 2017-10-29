@@ -1,221 +1,178 @@
-$blue-color: #199EB8
-$red-color: #ef5350
-$dark-blue-color: #1970b8
-
+.navbar-transparent
+  background: transparent !important
+  
 body
   font-family: 'Montserrat', sans-serif
-
-select
-  font-family: 'Montserrat', sans-serif 
-
-a 
-  color: #333
+  background-color: #fafafa
   
-a:focus, a:hover 
-  color: $blue-color
-  text-decoration: none
+input, .btn
+  font-family: 'Montserrat', sans-serif
  
-i
-  padding: 0 2px
-
-.btn
-  margin: 20px 10px
-  border-radius: 50px
-  background-color: $blue-color
-  border: none
-  padding: 10px 30px
-  font-weight: 800
-  cursor: pointer
+a, a:hover, a:active, a:visited
   color: white
- 
-.btn:hover 
-  background-color: $dark-blue-color !important
   
-.trash 
-  margin: 0px 10px
-  cursor: pointer
-  color: #f1f1f1 !important
+.navbar-black
+  background: black !important
 
-.trash:hover
-  color: $red-color !important
+.navbar-brand, .nav-link 
+  color: white !important
 
-.btn-link:hover
-  color: white
-  background-color: $dark-blue-color !important
-  text-decoration: none
- 
-.line
-  width: 80px
-  height: 2px
-  background: white
-  margin: 0 auto
-  margin-bottom: 15px
-  border-radius: 50px
+.navbar-brand
+  color: white!important
   
-#mainNav 
+.app-search 
   position: absolute
+  margin: 0px
+  z-index: 110
   width: 100%
-  z-index: 1
-  padding: 10px 0 15px
-  
-  .container
-    min-width: 90% 
-  button
-    margin-right: -20px
-  .navbar-brand 
-    color: white
-    font-weight: 800
-  .navbar-toggler
-    font-size: 12px
-    text-transform: uppercase
-    font-weight: 800
-    color: white
-    padding: 13px
-    border-color: #444
-  ul li a
-    font-size: 12px
-    text-transform: uppercase
-    font-weight: 600
-  @media screen and (min-width: 992px) 
-    color: #333 
-    background: transparent !important
-
-.header
-  background: no-repeat center center
-  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("https://image.freepik.com/free-photo/crop-man-using-laptop-at-street_1220-1772.jpg")
-  background-size: cover
-  text-align: center
-  margin-bottom: 20px
-  
-  h1
-    font-size: 40px
-    text-transform: uppercase
-    font-weight: 800
-  @media screen and (max-width: 992px)
-    h1 
-      font-size: 25px
-
-.heading-content
-  padding: 145px 0 100px
-  color: white
-
-.custom-select
-  outline: none
-  background: url('https://image.flaticon.com/icons/svg/118/118738.svg') right 0.65rem center no-repeat
-  background-size: 12px
-  margin-bottom: 0px
-  color: #333
-  cursor: pointer
-  border: 1px solid #e5e5e5
-  
-.post-title
-  font-size: 30px
-  font-weight: 800
-  margin-top: 25px
-  margin-bottom: 10px
-  @media screen and (max-width: 992px) 
-    font-size: 20px
-  
-.post-meta
-  span
-    color: #666
-  .vote
-    font-weight: 600
-  
-.btn-more
-  margin-right: 0
-  margin-top: 0
-  margin-left: 0
-  
-.form-group  
-  color: #333
-  label
-    font-size: 18px
+  top: 55px
+  left: 0px
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2)
   input
-    height: 38px
-  .form-control
-    font-family: 'Montserrat', sans-serif
-  .input-danger
-    border-bottom-color: #ef5350
- 
- 
-.form-control
-  border: 0 none
-  border-radius: 0
-  padding: 0
-  border-bottom: 1px solid #e5e5e5
-
-.card
-  padding: 10px
-  border: none
-  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.25)
-  h4
-    font-size: 18px
-    font-weight: 400
-    
-.danger
-  color: #ef5350
-  margin-top: 5px
-
-#pie-chart    
-  width: 584px
-  height: 292px
-  
-footer
-  text-align: center
-  
-  
-.toast-wrap
-  display: block
-  position: fixed
-  width: 250px
-  margin: 0
-  padding: 0
-  letter-spacing: normal
-  z-index: 1000 !important
-
-.toast-wrap.top-right 
-  top: 70px
-  right: 40px
-
-.toast-single
+    height: 0
+    border-radius: 0px
+    font-size: 17px
+    width: 0
+    padding: 0
+    transition: all 0.15s ease-in, padding 0.3s ease-in
+  .input-visible
+    height: auto
+    padding: 15px 20px
+    width: 100%
+   
+.main-search
   position: relative
-  transition: all 0.3s linear
-  margin-bottom: 10px
-
-.close-toast-single 
+  top: 0px
+  
+.srh-btn 
+  display: none
   position: absolute
-  top: 3px
-  right: 7px
+  top: 13px
+  cursor: pointer
+  background: #ffffff
+  width: 15px
+  height: 15px
+  right: 20px
+  font-size: 14px
+  
+.background
+  background: no-repeat center center
+  background-image: linear-gradient( rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35) ), url("https://images.pexels.com/photos/305832/pexels-photo-305832.jpeg?w=940&h=650&auto=compress&cs=tinysrgb")
+  background-size: cover
+  height: 700px
+  width: 100%
+  position: absolute
+  top: 0
+  z-index: -1
+  
+.btn
+  padding: 10px 15px !important
+  border-color: #ae9a65
+  background-color: #ae9a65
+  color: white
   font-size: 14px
   cursor: pointer
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2)
 
-.toast-content-wrap 
-  display: inline-block
-  width: 190px
-  h2 
-    padding-top: 15px
-    font-size: 16px
-  p 
-    font-size: 14px
-
-.toast-icon-wrap 
-  width: 50px
+.btn:hover
+  border-color: #927d47 !important
+  background-color: #927d47
+ 
+.btn:focus, .btn:active 
+  outline: none !important
+  box-shadow: none !important
+  
+.header
   text-align: center
+  color: white
+  margin-bottom: 200px
+  .heading-content
+    padding: 115px 0 100px
+    h1
+      padding: 20px 0
+      font-size: 55px
+      text-shadow: 0px 0px 10px #000000
+      @media screen and (max-width: 992px) 
+        font-size: 45px
+    .btn-search
+      margin: 10px
+      position: absolute
+      top: -4px
+      right: 0
+   
+footer
+  text-align: center
+  color: white
+  
+.none-margin
+  margin: 0
+  
+.copyright 
+  color: #999 !important
+
+.main
+  h2
+    padding-top: 20px
+    font-weight: 500
+  
+.item-header
+  display: block-inline
   float: left
-  font-size: 30px
-  margin-top: 10%
+ 
+img
+  width: 100%
+ 
+.img-wrap
+  margin-top: 5px
+  width: 100%
+  padding-bottom: 100%
+  overflow: hidden
+  position: relative
+  img
+    position: absolute
+    margin: auto
+    min-height: 100%
+    min-width: 100%
+    object-fit: cover
+.review
+  @media screen and (max-width: 767px) 
+    margin: 10px 0
+    
+.review-text
+  padding-left: 0 !important     
   
-.error
-  background-color: #ef5350
-  color: #ffffff
+.item-content
+  padding-top: 10px
+  width: 100%
+  margin: 0
+ 
+.catogory-wrap
+  display: block
+  float: right
   
-.display-none 
-  opacity: 0
+.catogory
+  display: inline-block
+  background-color: #ae9a65
+  padding: 3px 10px
+  font-size: 75%
+  border-radius: 50px
+  color: white
+  cursor: pointer
+  margin: 5px 2px
+  
+.name, .name:hover, .name:active, .name:visited
+  color: #333
+  font-weight: 400
+  font-size: 24px
 
-
-@keyframes fadeOut
-  0%
-    opacity: 1
-  100%
-    opacity: 0
+.dark-text, .dark-text:hover, .dark-text:active, .dark-text:visited
+  color: #333
+  
+.isClose
+  font-size: 12px
+  color: #99abb4
+  
+.status
+  margin: 10px 0px
+  span
+    margin: 0 5px
