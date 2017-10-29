@@ -28561,6 +28561,8 @@
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.componentDidMount = function () {
 	      _this.props.actions.fetchUser();
+	      if (!window.localStorage.getItem("lastTerm")) window.localStorage.setItem("lastTerm", "");
+	      _this.props.actions.searchNighLife({ term: window.localStorage.getItem("lastTerm") });
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
@@ -28571,7 +28573,7 @@
 	        'div',
 	        { className: 'App' },
 	        _react2.default.createElement(_MinimizedNavbar2.default, null),
-	        _react2.default.createElement(_Header2.default, null),
+	        _react2.default.createElement(_Header2.default, { term: window.localStorage.getItem("lastTerm") }),
 	        _react2.default.createElement(_Footer2.default, null)
 	      );
 	    }
@@ -33101,7 +33103,9 @@
 	      args[_key] = arguments[_key];
 	    }
 	
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Header.__proto__ || Object.getPrototypeOf(Header)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Header.__proto__ || Object.getPrototypeOf(Header)).call.apply(_ref, [this].concat(args))), _this), _this.componentDidMount = function () {
+	      _this.setState({ term: _this.props.term });
+	    }, _this.state = {
 	      term: ''
 	    }, _this.handleChange = function (event) {
 	      _this.setState({ term: event.target.value });
@@ -33113,6 +33117,7 @@
 	    }, _this.onSubmit = function (event) {
 	      if (!_this.state.term) return;
 	
+	      window.localStorage.lastTerm = _this.state.term;
 	      _this.context.router.history.push('/results');
 	      (0, _utils.getCoordByCity)(_this.state.term, function (location) {
 	        return _this.props.actions.fetchEvents(location);
@@ -33738,9 +33743,9 @@
 	    }, _this.handleChange = function (event) {
 	      _this.setState({ term: event.target.value });
 	    }, _this.onSubmit = function () {
-	      //this.context.router.history.push('/results');
 	      if (!_this.state.term) return;
 	
+	      window.localStorage.lastTerm = _this.state.term;
 	      (0, _utils.getCoordByCity)(_this.state.term, function (location) {
 	        return _this.props.actions.fetchEvents(location);
 	      });

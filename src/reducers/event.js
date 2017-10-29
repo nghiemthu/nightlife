@@ -7,6 +7,8 @@ const DEFAULT_ACTION = {
   term: ''
 };
 
+
+
 const actionsHandlers = {
   [types.GET_ALL_EVENTS]: (state, { payload }) =>({
 		...state, 

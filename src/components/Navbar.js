@@ -34,9 +34,9 @@ class Navbar extends React.Component {
   }
   
   onSubmit = () => {
-    //this.context.router.history.push('/results');
     if (!this.state.term) return;
-    
+  
+    window.localStorage.lastTerm = this.state.term;
     getCoordByCity(this.state.term, (location) => this.props.actions.fetchEvents(location));
     this.props.actions.searchNighLife({term: this.state.term});
   }

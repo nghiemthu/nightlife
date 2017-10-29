@@ -11,13 +11,16 @@ class App extends React.Component {
   
   componentDidMount = () => {
     this.props.actions.fetchUser();
+    if (!window.localStorage.getItem("lastTerm"))
+      window.localStorage.setItem("lastTerm", "");
+    this.props.actions.searchNighLife({term: window.localStorage.getItem("lastTerm")});
   }
 
   render() {
     return (
       <div className="App">
         <MinimizedNavbar />
-        <Header />
+        <Header term={window.localStorage.getItem("lastTerm")}/>
         <Footer />
       </div>
     );

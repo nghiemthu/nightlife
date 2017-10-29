@@ -12,6 +12,10 @@ class Header extends React.Component {
     router: PropTypes.object
   }
   
+  componentDidMount = () => {
+    this.setState({term: this.props.term});
+  }
+  
   state = {
     term: ''
   }
@@ -30,6 +34,7 @@ class Header extends React.Component {
   onSubmit = (event) => {
     if (!this.state.term) return;
     
+    window.localStorage.lastTerm = this.state.term;
     this.context.router.history.push('/results');
     getCoordByCity(this.state.term, (location) => this.props.actions.fetchEvents(location));
     this.props.actions.searchNighLife({term: this.state.term});
